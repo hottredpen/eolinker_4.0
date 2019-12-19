@@ -1,63 +1,91 @@
-# eoLinker AMS Lite For PHP (中文版)
+### eolinker4.0开源版本
 
-**eoLinker是国内最大的在线API接口管理平台，提供自动生成API文档、API自动化测试、Mock测试、团队协作等功能，旨在解决由于前后端分离导致的开发效率低下问题。**
+首先感谢eolinker官方对之前版本的开源，本项目为eolinker4.0开源版本。eoLinker是目前全球领先、国内最大的在线API接口管理平台，提供自动生成API文档、API自动化测试、Mock测试、团队协作等功能，旨在解决由于前后端分离导致的开发效率低下问题。
 
-目前eoLinker为来自全球的超过2万家企业提供快速、专业、稳定的API管理服务。eoLinker是Google谷歌开发者联盟的合作产品与企业，不定期举办线下交流分享活动促进国内API管理领域的发展。
+新版本的eolinker已不再开源，该版本为开源旧版本，本仓库仅供大家参考学习使用不会对其维护更新升级等，如需使用最新的eolinker请移步其官网：https://www.eolinker.com/ 感谢。
 
-eoLinker AMS Lite专为10人以内的小型团队设计，接近线上产品的功能，仅适用于个人体验、非营利组织以及教学交流等非商业场景使用。
+### 前端页面打包注意事项
+##### 1、node版本
+6.2.2
 
-![](http://data.eolinker.com/course/Qzs1tsha7e9c31c418ea97e3aee4fba1b99ea704bd5f24a)
+##### 2、包依赖
+目前为了包管理直接保存了所有的node_modules,所有只要node版本为6.2.2就可以
 
-## 特性
+##### 3、打包
+先清除之前的文件,如果之前没打过包请忽略（如：lib,eolinker）
+```
+rm -rf ./lib
+```
 
-1. 免费且开源，eoLinker拥有强大的免费产品，在过去的一年里面eoLinker已迭代超过300个版本，优化近千功能点，同时秉承开源精神，提供国际化的开源产品（支持中文简体、繁体以及英语），为广大的开发、测试以及管理人员提供专业的产品。
+在frontend_source_code中执行
+```
+./node_modules/babel-cli/bin/babel.js src -d lib
+```
+会根据 src 生成一个lib文件
+完成后，执行
+```
+./node_modules/gulp/bin/gulp.js
+```
 
-2. 同类产品中最强大的API文档管理系统，支持目前HTTP/HTTPS协议以及所有主流请求方式，并且提供了强大的版本管理功能，可以随时随地回滚API信息。同时支持数据库管理、状态码管理、项目文档管理等常用管理功能。
+完成后会在当前目录生成一个`eolinker`文件夹
 
-3. API接口测试，支持文件、在线、跨域、自动化测试等功能。同时拥有参数构造器，可以对请求参数进行自动构造，加密、分割、随机字符串等功能一应俱全。配合测试用例可以非常方便地对比请求结果与模型，找出API可能出现的问题。
+##### 4、发布
+将backend_source_code命名为server放入eolinker内，就是一个发布包
 
-4. API自动化测试，eoLinker是目前全球唯一一款支持界面与代码双模式的自动化测试工具。在UI界面模式下，你不需要编写任何代码即可创建数据相互关联的API测试用例（比如注册-登录-检查登陆状况-退出登录）；同时你也可以通过编写Javascript代码来构造复杂的自动化测试场景。这些都极大地简化了开发测试人员的API测试工作，每次开发完成只需要一个键即可自动测试所有API并且生成测试报告，帮助了解项目API的健康状况。
+##### 5、其他
+数据库的配置在
+server/RTP/config/eo_config.php没有的话请自行创建
+```
+<?php
+//主机地址
+defined('DB_URL') or define('DB_URL', 'localhost');
 
-5. API Mock测试，提供最强的Mock功能，支持MockJS，支持自动刷新返回结果以及多种返回的结果。同时还支持对API进行请求校验，当参数或值不符合预设的模板时能够及时找出问题所在。
+//主机端口,默认mysql为3306
+defined('DB_PORT') or define('DB_PORT', '3306');
 
-6. 支持文档分享和导出，你可以通过eoLinker在线生成接口文档，也可以导出成为HTML、PDF以及Word等，快速分享或发布API信息。
+//连接数据库的用户名
+defined('DB_USER') or define('DB_USER', 'root');
 
-7. 支持Postman、RAP、RestClint等数据导入，无需重新录入API信息，一键导入即可切换平台。
+//连接数据库的密码，推荐使用随机生成的字符串
+defined('DB_PASSWORD') or define('DB_PASSWORD', '123456');
 
-8. 强大的团队协作功能，你可以通过URL快速邀请成员或者加入某个项目，eoLinker提供了全面的日志追踪以及权限管理功能。
+//数据库名
+defined('DB_NAME') or define('DB_NAME', 'eolinker');
 
-9. 拥有最全面的产品线，eoLinker除了拥有免费开源版本之外，还提供了线上版本、私有云版本、浏览器插件、PC端桌面程序等，可以满足企业所有的API管理需求。
+//是否允许新用户注册
+defined('ALLOW_REGISTER') or define('ALLOW_REGISTER', TRUE);
 
-## 部署要求
+//是否允许更新项目，如果设置为FALSE，那么自动更新和手动更新都将失效
+defined('ALLOW_UPDATE') or define('ALLOW_UPDATE', TRUE);
 
-* PHP 5.6+
-* mysql  5.5+
-* Nginx（推荐） / Apache
+//网站名称
+defined('WEBSITE_NAME') or define('WEBSITE_NAME', 'eoLinker开源版本');
 
-## 快速入门
+//数据表前缀
+defined('DB_TABLE_PREFIXION') or define('DB_TABLE_PREFIXION', 'eo');
 
-1. [安装指南](http://help.eolinker.com/?target=/md/%E5%BC%80%E6%BA%90%E7%89%88%E6%9C%AC/%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97)
+//语言
+defined('LANGUAGE') or define ('LANGUAGE', 'zh-cn');
+?>
+```
 
-2. [帮助中心](http://help.eolinker.com)
+错误：
+mac能再本地跑3.5版本但是跑不了4.0版本。但测试上可以跑4.0版本
+会有类似以下的错误（可能是缺少某种字体）
+```
+Uncaught SyntaxError: Unexpected token '<'
+```
 
-3. 官方交流Q群：
-	[用户讨论1群(已满，暂停加入)]
-	[用户讨论2群(已满，暂停加入)]
-	[用户讨论3群(已满，暂停加入)]
-	[用户讨论4群(已满，暂停加入)]
-	[用户讨论5群(已满，暂停加入)]
-	[用户讨论6群(已满，暂停加入)]
-	[用户讨论7群(开放)：857400042](https://jq.qq.com/?_wv=1027&k=5zRbDcY)
+修改：
+以下几个文件可能在改变前端样式的时候会有修改
+```
+    modified:   app/component/footer/index.html
+    modified:   app/component/navbar/nav0/index.html
+    modified:   app/component/navbar/nav1/index.html
+    modified:   app/component/navbar/nav2/index.html
+    modified:   app/component/sidebar/index.js
+    modified:   app/constant/trans.constants.js
+    modified:   index.html
+```
 
-## 注意事项
 
-1. 3.x版本与2.x版本并不兼容，因此无法直接由2.x升级到3.x，也无法通过覆盖代码的方式进行升级，切勿随意尝试以防数据丢失。
-2. 如果需要进行数据的迁移，可以使用eoLinker接口管理系统中的【导出项目】功能：将项目导出为eoLinker专用格式（.export），然后在3.x版本中导入。
-3. 为了防止数据丢失，请在执行任何关键操作之前妥善备份数据库。
-
-## 图片介绍
-
-![](http://data.eolinker.com/course/UKqa58Lb051cf1085b22bf4d1e24c52022c981dc32166bd)
-![](http://data.eolinker.com/course/nNmSD28e4ef5c7339c5449cb4f8c5904be7f025d0d6ae72)
-![](http://data.eolinker.com/course/Rgz8DcQ4f21471cb1172573fdb595a1c165148f6bcfdb22)
-![](http://data.eolinker.com/course/JPGkitw9d6f38f7fc541d9202850c3dffe82d1e575c2a6c)
